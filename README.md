@@ -1,25 +1,29 @@
-A little python script i made to extract chords from an audio file (using [ohollo/chord-extractor](https://github.com/ohollo/chord-extractor)) and visualize them in an HTML file along with chord diagrams (#TODO). you can also transpose the chords and view them in either guitar or ukulele mode.
+FORK of "chord-extractor HTML generator" code made by AdielBm @ https://github.com/adielBm/chord-extractor
 
-> Requirements: Python, [chord-extractor](https://github.com/ohollo/chord-extractor) and its requirements )
+### GOALS
+- Add functional chord diagrams.
+- Fix the generation of chord-diagrams from the original code, which prevents any sharp chords from being displayed.
+- Implement some changes/improvements to the original project.
 
-![Example](example.gif)
+  
+
+### REQUIREMENTS
+- Python (The same version as 'ohollo/chord-extractor' needs).
+Please note that chord-extractor currently requires python 3.9.x, 'pyenv' and 'direnv' may be used for this purpose.
+
+- Ohollo's chord-extractor and all of its dependences (See https://github.com/ohollo/chord-extractor)
+
 
 ### Usage
 
+LINUX:
+```
+$ python cho.py song.mp3
+```
+WIN:
 ```
 C:\...\Music> python "C:\...\chord_extractor\cho.py" "song.mp3"
 ```
 
-### TODO
-
-- get chord diagrams for guitar or ukulele. something like:
-
-```
-/guitar/A.png
-/guitar/Am.png
-/ukulele/Dm.png
-/ukulele/C.png
-...
-```
-
-
+An HTML with the same name of the .mp3 file will be generated.
+Don't move their dependences (script.js, style.css, 'guitar' and 'ukelele' folders, ...).
