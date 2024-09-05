@@ -14,7 +14,7 @@ Please note that chord-extractor currently requires python 3.9.x, 'pyenv' and 'd
 - Ohollo's chord-extractor and all of its dependences (See https://github.com/ohollo/chord-extractor)
 
 
-### Usage
+### USAGE
 
 LINUX:
 ```
