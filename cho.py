@@ -3,19 +3,19 @@ import argparse
 import json
 import re
 import unicodedata
+import numpy as np
+import librosa
 from chord_extractor.extractors import Chordino
-from urllib.parse import quote, unquote
+from urllib.parse import quote
 
 DB_FILE = "chords_db.json"
 
 def sanitize_filename(input_str):
-    """ Codifica caracteres especiales en el nombre del archivo. """
     normalized = unicodedata.normalize('NFKD', input_str).encode('ASCII', 'ignore').decode('utf-8')
-    sanitized = re.sub(r'[^\w\s-]', '', normalized)  # Eliminar caracteres no permitidos
+    sanitized = re.sub(r'[^\w\s-]', '', normalized)
     return sanitized.strip().replace(' ', '_')
 
 def sanitize_url(url):
-    """ Codifica caracteres especiales en la URL del archivo. """
     return quote(url, safe='/:')
 
 def extract_chords_from_audio(audio_file):
@@ -24,7 +24,12 @@ def extract_chords_from_audio(audio_file):
     chords = chordino.extract(audio_file)
     return chords
 
-def update_chords_db(artist, title, chords):
+def get_bpm(audio_file):
+    y, sr = librosa.load(audio_file)
+    tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
+    return round(tempo[0]) if isinstance(tempo, (list, np.ndarray)) else round(tempo)
+
+def update_chords_db(artist, title, chords, bpm):
     if os.path.exists(DB_FILE):
         with open(DB_FILE, "r", encoding="utf-8") as f:
             chords_db = json.load(f)
@@ -42,7 +47,8 @@ def update_chords_db(artist, title, chords):
     song_entry = {
         "artist": artist,
         "title": title,
-        "chords": chord_counts
+        "chords": chord_counts,
+        "bpm": bpm
     }
 
     chords_db.append(song_entry)
@@ -52,12 +58,11 @@ def update_chords_db(artist, title, chords):
 
     return song_entry
 
-def generate_html_with_chords(audio_file, chords, artist, title):
+def generate_html_with_chords(audio_file, chords, artist, title, bpm):
     sanitized_artist = sanitize_filename(artist)
     sanitized_title = sanitize_filename(title)
     output_file_name = f"{sanitized_artist}_{sanitized_title}.html"
 
-    # Codificar el nombre del archivo de audio para el HTML
     sanitized_audio_file = sanitize_url(audio_file)
 
     html_content = f"""
@@ -73,11 +78,16 @@ def generate_html_with_chords(audio_file, chords, artist, title):
     <header>
       <div>
         <h4>File: {sanitized_audio_file}</h4>
+        <label for="bpm-input">BPM:</label>
+        <input type="number" id="bpm-input" value="{bpm}" step="1" min="30" max="300" />
+        <button id="update-bpm">Update BPM</button>
         <audio controls>
           <source src="{sanitized_audio_file}" type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
         <div>
+          <button id="vel-up">BPM(+)</button>
+          <button id="vel-down">BPM(-)</button>
           <button id="transpose-up">Transpose Up (+)</button>
           <button id="transpose-down">Transpose Down (-)</button>
           Transpose: <span id="transpose-counter">0</span>, Capo:
@@ -152,6 +162,7 @@ def generate_db_html():
                 <th>Title</th>
                 <th>Chord</th>
                 <th>Times Used</th>
+                <th>BPM</th>  <!-- Añadir columna BPM -->
             </tr>
         </thead>
         <tbody>
@@ -160,8 +171,9 @@ def generate_db_html():
     for entry in chords_db:
         artist = entry["artist"]
         title = entry["title"]
+        bpm = entry.get("bpm", "N/A")
         for chord, count in entry["chords"].items():
-            html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td></tr>"
+            html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td><td>{bpm}</td></tr>"
 
     html_content += """
         </tbody>
@@ -177,7 +189,8 @@ def generate_db_html():
                     { "orderable": true },
                     { "orderable": true },
                     { "orderable": true },
-                    { "orderable": true }
+                    { "orderable": true },
+                    { "orderable": false }  // Columna BPM no ordenable
                 ]
             });
         });
@@ -195,10 +208,11 @@ def generate_db_html():
 
 def main(audio_file, artist, title):
     chords = extract_chords_from_audio(audio_file)
-    html_file = generate_html_with_chords(audio_file, chords, artist, title)
+    bpm = get_bpm(audio_file)  # Obtener BPM
+    html_file = generate_html_with_chords(audio_file, chords, artist, title, bpm)
     print(f"\033[92m{html_file} has been generated\033[0m")
 
-    update_chords_db(artist, title, chords)
+    update_chords_db(artist, title, chords, bpm)  # Actualizar base de datos con BPM
 
     generate_db_html()
 
