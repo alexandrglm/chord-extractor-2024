@@ -9,9 +9,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const chordDiagramNext = document.getElementById("chord-diagram-next");
   const chordCurrent = document.getElementById("chord-current");
   const chordNext = document.getElementById("chord-next");
+  const velUpButton = document.getElementById("vel-up");
+  const velDownButton = document.getElementById("vel-down");
+  const bpmInput = document.getElementById("bpm-input");
+  const updateBPMButton = document.getElementById("update-bpm");
+  const zoomInButton = document.getElementById("zoom-in");
+  const zoomOutButton = document.getElementById("zoom-out");
 
   let maxChordLength = 0;
   let instrument = "guitar";
+  let playbackRate = 1.0;
+  let currentBPM = 120;
 
   chords.forEach((chord) => {
     chord.addEventListener("click", function () {
@@ -37,30 +45,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  chords.forEach((chord) => {
-    let length = chord.getAttribute("length");
-    const n = 3;
-    length = parseFloat(length).toFixed(n);
-    let w = (length / maxChordLength.toFixed(n)) * 400;
-    chord.style.width = w + "px";
-  });
-
-  chords.forEach((chord) => {
-    let length = chord.getAttribute("length");
-    chord.style.setProperty("--animation-duration", length + "s");
-  });
-
-  function scaleChordWidth(x) {
+  function updateChordWidth() {
     chords.forEach((chord) => {
-      chord.style.width = chord.style.width.replace("px", "") * x + "px";
+      let length = chord.getAttribute("length");
+      const n = 3;
+      length = parseFloat(length).toFixed(n);
+      let w = (length / maxChordLength.toFixed(n)) * 400;
+      chord.style.width = w + "px";
     });
   }
 
-  document.getElementById("zoom-in").addEventListener("click", function () {
+  function updateAnimationDuration() {
+    chords.forEach((chord) => {
+      let length = chord.getAttribute("length");
+      chord.style.setProperty("--animation-duration", (length / playbackRate) + "s");
+    });
+  }
+
+  updateChordWidth();
+  updateAnimationDuration();
+
+  function scaleChordWidth(x) {
+    chords.forEach((chord) => {
+      let currentWidth = parseFloat(chord.style.width.replace("px", ""));
+      chord.style.width = (currentWidth * x) + "px";
+    });
+  }
+
+  zoomInButton.addEventListener("click", function () {
     scaleChordWidth(1.5);
   });
 
-  document.getElementById("zoom-out").addEventListener("click", function () {
+  zoomOutButton.addEventListener("click", function () {
     scaleChordWidth(0.8);
   });
 
@@ -74,6 +90,33 @@ document.addEventListener("DOMContentLoaded", function () {
     transposeChords(-1);
     transposeCounter.innerHTML = parseInt(transposeCounter.innerHTML) - 1;
     capoCounter.innerHTML = transposeCounter.innerHTML * -1;
+  });
+
+  velUpButton.addEventListener("click", function () {
+    playbackRate = Math.min(playbackRate + 0.1, 2.0);
+    audio.playbackRate = playbackRate;
+    currentBPM = currentBPM * (playbackRate / (playbackRate - 0.1));
+    bpmInput.value = Math.round(currentBPM);
+    updateAnimationDuration();
+  });
+
+  velDownButton.addEventListener("click", function () {
+    playbackRate = Math.max(playbackRate - 0.1, 0.5);
+    audio.playbackRate = playbackRate;
+    currentBPM = currentBPM * (playbackRate / (playbackRate + 0.1));
+    bpmInput.value = Math.round(currentBPM);
+    updateAnimationDuration();
+  });
+
+  updateBPMButton.addEventListener("click", function () {
+    let newBPM = parseFloat(bpmInput.value);
+    if (!isNaN(newBPM)) {
+      playbackRate = newBPM / currentBPM;
+      playbackRate = Math.max(0.5, Math.min(2.0, playbackRate));
+      audio.playbackRate = playbackRate;
+      currentBPM = newBPM;
+      updateAnimationDuration();
+    }
   });
 
   setInterval(function () {
@@ -98,7 +141,6 @@ document.addEventListener("DOMContentLoaded", function () {
           chordNext.innerHTML = chord.nextElementSibling.innerHTML;
           chordDiagramNext.src = `./diagrams/${instrument}/${simplifyChord(chord.nextElementSibling.innerHTML)}.png`;
         }
-      } else {
       }
     });
   }, 150);
@@ -140,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .replace(/A%23|A#/g, "Bb");
   }
 
-  // **Parte nueva para la ordenación de la tabla de la base de datos**
   const table = document.getElementById('chords-table');
   if (table) {
     const headers = table.querySelectorAll('th');
