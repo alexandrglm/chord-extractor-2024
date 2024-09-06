@@ -162,7 +162,7 @@ def generate_db_html():
                 <th>Title</th>
                 <th>Chord</th>
                 <th>Times Used</th>
-                <th>BPM</th>  <!-- Añadir columna BPM -->
+                <th>BPM</th>
             </tr>
         </thead>
         <tbody>
@@ -190,7 +190,7 @@ def generate_db_html():
                     { "orderable": true },
                     { "orderable": true },
                     { "orderable": true },
-                    { "orderable": false }  // Columna BPM no ordenable
+                    { "orderable": false } 
                 ]
             });
         });
@@ -212,7 +212,7 @@ def main(audio_file, artist, title):
     html_file = generate_html_with_chords(audio_file, chords, artist, title, bpm)
     print(f"\033[92m{html_file} has been generated\033[0m")
 
-    update_chords_db(artist, title, chords, bpm)  # Actualizar base de datos con BPM
+    update_chords_db(artist, title, chords, bpm)
 
     generate_db_html()
 
