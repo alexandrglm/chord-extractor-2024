@@ -38,10 +38,10 @@ def generate_html_with_chords(audio_file, chords):
         </div>
       </div>
       <div id="chord-diagram-bar">
-        <img id="chord-diagram-current" src="empty.png" />
+        <img id="chord-diagram-current" src="./diagrams/empty.png" />
         <h1 id="chord-current"></h1>
         <div style=" width: 2px; height: 100%; display: block; background: #8d94b4; margin: 15px; "></div>
-        <img id="chord-diagram-next" src="empty.png" />
+        <img id="chord-diagram-next" src="./diagrams/empty.png" />
         <h1 id="chord-next"></h1>
       </div>
     </header>
