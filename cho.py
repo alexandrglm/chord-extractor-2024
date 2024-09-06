@@ -4,13 +4,19 @@ import json
 import re
 import unicodedata
 from chord_extractor.extractors import Chordino
+from urllib.parse import quote, unquote
 
 DB_FILE = "chords_db.json"
 
 def sanitize_filename(input_str):
+    """ Codifica caracteres especiales en el nombre del archivo. """
     normalized = unicodedata.normalize('NFKD', input_str).encode('ASCII', 'ignore').decode('utf-8')
     sanitized = re.sub(r'[^\w\s-]', '', normalized)  # Eliminar caracteres no permitidos
     return sanitized.strip().replace(' ', '_')
+
+def sanitize_url(url):
+    """ Codifica caracteres especiales en la URL del archivo. """
+    return quote(url, safe='/:')
 
 def extract_chords_from_audio(audio_file):
     chordino = Chordino()
@@ -51,10 +57,14 @@ def generate_html_with_chords(audio_file, chords, artist, title):
     sanitized_title = sanitize_filename(title)
     output_file_name = f"{sanitized_artist}_{sanitized_title}.html"
 
+    # Codificar el nombre del archivo de audio para el HTML
+    sanitized_audio_file = sanitize_url(audio_file)
+
     html_content = f"""
     <!DOCTYPE html>
     <html>
     <head>
+        <meta charset="UTF-8">
         <title>Chords from {artist} - {title}</title>
         <script src="./scripts/script.js"></script>
         <link rel="stylesheet" type="text/css" href="./scripts/style.css" />
@@ -62,9 +72,9 @@ def generate_html_with_chords(audio_file, chords, artist, title):
     <body>
     <header>
       <div>
-        <h4>File: {audio_file}</h4>
+        <h4>File: {sanitized_audio_file}</h4>
         <audio controls>
-          <source src="{audio_file}" type="audio/mpeg" />
+          <source src="{sanitized_audio_file}" type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
         <div>
@@ -118,6 +128,7 @@ def generate_db_html():
     <!DOCTYPE html>
     <html>
     <head>
+        <meta charset="UTF-8">
         <title>Chords Database</title>
         <script src="./scripts/jquery.min.js"></script>
         <script src="./scripts/jquery.dataTables.min.js"></script>
