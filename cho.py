@@ -1,6 +1,16 @@
 import os
 import argparse
+import json
+import re
+import unicodedata
 from chord_extractor.extractors import Chordino
+
+DB_FILE = "chords_db.json"
+
+def sanitize_filename(input_str):
+    normalized = unicodedata.normalize('NFKD', input_str).encode('ASCII', 'ignore').decode('utf-8')
+    sanitized = re.sub(r'[^\w\s-]', '', normalized)  # Eliminar caracteres no permitidos
+    return sanitized.strip().replace(' ', '_')
 
 def extract_chords_from_audio(audio_file):
     chordino = Chordino()
@@ -8,15 +18,46 @@ def extract_chords_from_audio(audio_file):
     chords = chordino.extract(audio_file)
     return chords
 
-def generate_html_with_chords(audio_file, chords):
-    output_file_name = os.path.splitext(os.path.basename(audio_file))[0] + ".html"
+def update_chords_db(artist, title, chords):
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "r", encoding="utf-8") as f:
+            chords_db = json.load(f)
+    else:
+        chords_db = []
+
+    chord_counts = {}
+    for chord in chords:
+        chord_name = chord.chord
+        if chord_name not in chord_counts:
+            chord_counts[chord_name] = 1
+        else:
+            chord_counts[chord_name] += 1
+
+    song_entry = {
+        "artist": artist,
+        "title": title,
+        "chords": chord_counts
+    }
+
+    chords_db.append(song_entry)
+
+    with open(DB_FILE, "w", encoding="utf-8") as f:
+        json.dump(chords_db, f, indent=4, ensure_ascii=False)
+
+    return song_entry
+
+def generate_html_with_chords(audio_file, chords, artist, title):
+    sanitized_artist = sanitize_filename(artist)
+    sanitized_title = sanitize_filename(title)
+    output_file_name = f"{sanitized_artist}_{sanitized_title}.html"
+
     html_content = f"""
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Chords from Audio</title>
-        <script src="script.js"></script>
-        <link rel="stylesheet" type="text/css" href="style.css" />
+        <title>Chords from {artist} - {title}</title>
+        <script src="./scripts/script.js"></script>
+        <link rel="stylesheet" type="text/css" href="./scripts/style.css" />
     </head>
     <body>
     <header>
@@ -61,19 +102,102 @@ def generate_html_with_chords(audio_file, chords):
     """
 
     html_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), output_file_name)
-    with open(html_file, "w") as f:
+    with open(html_file, "w", encoding="utf-8") as f:
         f.write(html_content)
 
     return html_file
 
-def main(audio_file):
+def generate_db_html():
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "r", encoding="utf-8") as f:
+            chords_db = json.load(f)
+    else:
+        chords_db = []
+
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Chords Database</title>
+        <script src="./scripts/jquery.min.js"></script>
+        <script src="./scripts/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="./scripts/jquery.dataTables.min.css">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { text-align: center; margin-bottom: 40px; }
+            table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+            table, th, td { border: 1px solid #ddd; }
+            th, td { padding: 8px; text-align: center; }
+            th { background-color: #f4f4f4; cursor: pointer; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+        </style>
+    </head>
+    <body>
+    <h1>Chords Database</h1>
+    <table id="chords-table">
+        <thead>
+            <tr>
+                <th>Artist</th>
+                <th>Title</th>
+                <th>Chord</th>
+                <th>Times Used</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
+
+    for entry in chords_db:
+        artist = entry["artist"]
+        title = entry["title"]
+        for chord, count in entry["chords"].items():
+            html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td></tr>"
+
+    html_content += """
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            $('#chords-table').DataTable({
+                "paging": true,
+                "searching": true,
+                "order": [[3, "desc"]],
+                "columns": [
+                    { "orderable": true },
+                    { "orderable": true },
+                    { "orderable": true },
+                    { "orderable": true }
+                ]
+            });
+        });
+    </script>
+    </body>
+    </html>
+    """
+
+    db_html_file = "chords_database.html"
+    with open(db_html_file, "w", encoding="utf-8") as f:
+        f.write(html_content)
+
+    print(f"\033[92m{db_html_file} has been generated\033[0m")
+    return db_html_file
+
+def main(audio_file, artist, title):
     chords = extract_chords_from_audio(audio_file)
-    html_file = generate_html_with_chords(audio_file, chords)
+    html_file = generate_html_with_chords(audio_file, chords, artist, title)
     print(f"\033[92m{html_file} has been generated\033[0m")
+
+    update_chords_db(artist, title, chords)
+
+    generate_db_html()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate HTML with chords from audio file")
     parser.add_argument("audio_file", nargs=argparse.REMAINDER, help="Path to the audio file")
     args = parser.parse_args()
     audio_file = ' '.join(args.audio_file)
-    main(audio_file)
+
+    artist = input("Artist: ")
+    title = input("Title: ")
+
+    main(audio_file, artist, title)
