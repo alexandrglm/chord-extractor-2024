@@ -1,4 +1,6 @@
 # Chord Extraction&Database Tool v.0.1
+_The real alternative to Chordify, but free and offline._
+
 A python and HTML/CSS/JS based tool to **extract chords from any song**, 
 which  **creates a database to analyze and show** chord-key data by  different criteria as *title*, *artist*, by *chord type*, *number of times* a chord appears; by song, by a group of songs or globally.
 
@@ -7,6 +9,7 @@ which  **creates a database to analyze and show** chord-key data by  different c
 
  - Chord extracting from any MP3, WAV, MIDI file.
  - Chord Visualizer with GUITAR diagrams, HTML5-webkit compatible.
+ - BPM analyzer tool & live rhythm change.
  - Chord transposing with live changing diagrams.
  - A database generation for analysing purposses capable of sorting chords, how many times used, the most and least used chords; by song, globally, ....
 
@@ -36,10 +39,11 @@ WINDOWS:
 C:\ python "C:\...\chord_extractor\cho.py" full_path_file.mp3
 ```
 
-In order to generate *song_chords.html* and *chord_database.html* both,  you are asked to provide:
+In order to generate *song_chords.html* and *chord_database.html* both,  you are told to provide some info as:
 
  - ARTIST NAME
  - SONG TITLE
+
 
 
 
