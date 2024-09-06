@@ -69,7 +69,7 @@ def generate_html_with_chords(audio_file, chords):
 def main(audio_file):
     chords = extract_chords_from_audio(audio_file)
     html_file = generate_html_with_chords(audio_file, chords)
-    print(f"\033[92m{html_file} ha sido generado\033[0m")
+    print(f"\033[92m{html_file} has been generated\033[0m")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate HTML with chords from audio file")
