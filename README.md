@@ -10,20 +10,19 @@ FORK of "chord-extractor HTML generator" code made by AdielBm @ https://github.c
 ### REQUIREMENTS
 - Python (The same version as 'ohollo/chord-extractor' needs).
 Please note that chord-extractor currently requires python 3.9.x, 'pyenv' and 'direnv' may be used for this purpose.
-
 - Ohollo's chord-extractor and all of its dependences (See https://github.com/ohollo/chord-extractor)
 
 
 ### USAGE
 
+* No need of using "quotation marks" in the input path.
+
 LINUX:
 ```
 $ python cho.py song.mp3
 ```
-WIN:
-```
-C:\...\Music> python "C:\...\chord_extractor\cho.py" "song.mp3"
-```
 
 An HTML with the same name of the .mp3 file will be generated.
-Don't move their dependences (script.js, style.css, 'guitar' and 'ukelele' folders, ...).
+
+
+2024, September. 6th.
