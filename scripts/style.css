@@ -1,24 +1,46 @@
-ul#chords {
-  display: flex;
-  padding: 10px;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-audio {
-  width: -webkit-fill-available;
+body {
+  margin: 0;
+  background: #F08080;
+  color: #424242;
+  font-family: monospace;
 }
 
 header {
   display: grid;
   grid-template-columns: auto auto;
-  height: 150px;
+  height: 200px;
   position: sticky;
   top: 0;
-  background: white;
+  background: #F5F5F5;
   border-radius: 0 0 10px 10px;
   padding: 20px;
-  box-shadow: 1px 1px 10px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.bpm-input {
+  width: 150px;
+  height: 20px;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.keynote {
+  width: 150px;
+  height: 20px;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#chord-diagram-bar {
+  max-height: 150px;
+  display: flex;
+  align-items: flex-end;
+  width: 378px;
 }
 
 #chord-diagram-current,
@@ -31,30 +53,41 @@ header {
   opacity: 0.7;
 }
 
-#chord-diagram-bar {
-  max-height: 150px;
+ul#chords {
   display: flex;
-  align-items: flex-end;
-  width: 378px;
+  padding: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
 ul#chords li {
   list-style: none;
-  background: #bbc6f8;
+  background: #C6FF00;
   padding: 5px 10px;
   font-size: 20px;
   border-radius: 3px;
   cursor: pointer;
+  color: #424242;
 }
 
-body {
-  margin: 0;
-  background: #8d94b4;
-  color: #00136c;
-  font-family: monospace;
+ul#chords li.actived {
+  background: #FFFFFF;
 }
 
-/* Keyframes for the animation */
+ul#chords li.active {
+  background: linear-gradient(to right, #FFFFFF 50%, #C6FF00 50%);
+  background-size: 200% 100%;
+  animation-name: slideBackground;
+  --animation-duration: 1s;
+  animation-duration: var(--animation-duration);
+  animation-timing-function: linear;
+}
+
+audio {
+  width: -webkit-fill-available;
+}
+
 @keyframes slideBackground {
   from {
     background-position: right;
@@ -64,15 +97,20 @@ body {
   }
 }
 
-ul#chords li.actived {
-  background: white
+button {
+  background-color: #9E9D24;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-ul#chords li.active {
-  background: linear-gradient(to right, rgb(255, 255, 255) 50%, #bbc6f8 50%);
-  background-size: 200% 100%;
-  animation-name: slideBackground;
-  --animation-duration: 1s; /* Set a default value */
-  animation-duration: var(--animation-duration);
-  animation-timing-function: linear;
+button:hover {
+  background-color: #7B7F0C;
+
+#tempo-changes,
+#key-changes,
+#song-structure {
+  margin-top: 0px;
 }
