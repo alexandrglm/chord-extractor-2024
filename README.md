@@ -1,4 +1,4 @@
-# Chordy v0.2 - Musical analyzer
+# Chord-yzer v0.2 - Musical analyzer
 ## Chord Extraction & Database & Analysis Tool
 _Should be the real alternative to Chordify, but free and offline._ 
 
