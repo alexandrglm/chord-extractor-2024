@@ -16,10 +16,10 @@ def generate_db_html():
     <head>
         <meta charset="UTF-8">
         <title>Chords Database</title>
-        <script src="./scripts/chart.js"></script>
-        <script src="./scripts/jquery.min.js"></script>
-        <script src="./scripts/jquery.dataTables.min.js"></script>
-        <link rel="stylesheet" href="./scripts/jquery.dataTables.min.css">
+        <script src="./engine/scripts/chart.js"></script>
+        <script src="./engine/scripts/jquery.min.js"></script>
+        <script src="./engine/scripts/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="./engine/scripts/jquery.dataTables.min.css">
         <style>
             body { font-family: Arial, sans-serif; margin: 20px; }
             h1 { text-align: center; margin-bottom: 40px; }
