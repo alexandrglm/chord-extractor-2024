@@ -1,6 +1,6 @@
 # Chordy v0.2 - Musical analyzer
 ## Chord Extraction & Database & Analysis Tool
-_Should be the real alternative to Chordify, but free and offline._ (Work in progress)
+_Should be the real alternative to Chordify, but free and offline._ 
 
 A python and HTML/CSS/JS based tool to **extract chords from any song**, 
 which  **creates a database to analyze and show** chord-key data by  different criteria as *title*, *artist*, by *chord type*, *number of times* a chord appears; by song, by a group of songs or globally.
@@ -39,16 +39,6 @@ The program generates:
  *- ARTIST NAME*
  *- SONG TITLE*
 
-
-
-
-### LICENSING
-
- 1. JQuery is used to display data from the database under MIT License https://jquery.com/license/
- 2. Chord-Extractor and its dependences are used under GNU General Public Licensing v2.0 
- https://github.com/ohollo/chord-extractor/blob/master/LICENSE
- 3. This software started as a fork of https://github.com/adielBm/chord-extractor . 
- However, due to the profound changes made, starting the music engine from scratch and many other improvements, the project will evolve as a new creation in the near future.
-
+(Development in progress)
 
 2024 September, 8th.
