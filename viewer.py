@@ -28,8 +28,8 @@ def generate_html_with_chords(audio_file, chords, artist_name, song_title, tempo
     <head>
         <meta charset="UTF-8">
         <title>Chords from {artist_name} - {song_title}</title>
-        <script src="./scripts/script.js"></script>
-        <link rel="stylesheet" type="text/css" href="./scripts/style.css" />
+        <script src="./engine/scripts/script.js"></script>
+        <link rel="stylesheet" type="text/css" href="./engine/scripts/style.css" />
     </head>
     <body>
     <header>
