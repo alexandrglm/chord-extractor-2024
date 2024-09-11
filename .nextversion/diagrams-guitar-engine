@@ -1,0 +1,69 @@
+# main.py
+import chords_data
+def generate_svg_chord(chord_name, finger_positions, muted_strings, open_strings):
+    """Generates a svg file with the chord"""
+    width, height = 200, 300
+    fret_width, string_height = width / 6, height / 6
+    svg_elements = []
+    for i in range(6):
+        x = i * fret_width
+        svg_elements.append(f'<line x1="{x}" y1="0" x2="{x}" y2="{height}" stroke="black" stroke-width="2"/>')
+    for i in range(6):
+        y = i * string_height
+        svg_elements.append(f'<line x1="0" y1="{y}" x2="{width}" y2="{y}" stroke="black" stroke-width="2"/>')
+    for (string, fret) in finger_positions:
+        x = fret_width * (string - 1)
+        y = string_height * (fret)
+        svg_elements.append(f'<circle cx="{x + fret_width / 2}" cy="{y - string_height / 2}" r="10" fill="black"/>')
+    for string in muted_strings:
+        x = fret_width * (string - 1)
+        svg_elements.append(f'<text x="{x + fret_width / 2}" y="{string_height / 4}" font-size="24" text-anchor="middle">X</text>')
+    for string in open_strings:
+        x = fret_width * (string - 1)
+        svg_elements.append(f'<text x="{x + fret_width / 2}" y="{string_height / 4}" font-size="24" text-anchor="middle">O</text>')
+    svg_content = '\n'.join(svg_elements)
+    svg_data = f'''<?xml version="1.0" encoding="UTF-8"?>
+<svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">
+<rect width="100%" height="100%" fill="white"/>
+{svg_content}
+</svg>'''
+    
+    return svg_data
+
+def save_html_with_svg(chord_name, svg_data, output_file):
+    """saving the html"""
+    html_content = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord Viewer - {chord_name}</title>
+</head>
+<body>
+    <h1>{chord_name} Chord</h1>
+    <div>
+        {svg_data}
+    </div>
+</body>
+</html>'''
+
+    with open(output_file, 'w') as file:
+        file.write(html_content)
+
+def main():
+    chord_name = input("CHORD TO BE SHWON?: ")
+    if chord_name not in chords_data.chords:
+        print(f"Acorde '{chord_name}' no encontrado.")
+        return
+    
+    chord_info = chords_data.chords[chord_name]
+    finger_positions = chord_info['positions']
+    muted_strings = chord_info['muted']
+    open_strings = chord_info['open'] 
+    svg_data = generate_svg_chord(chord_name, finger_positions, muted_strings, open_strings)
+    output_file = f"{chord_name}_chord_viewer.html"
+    save_html_with_svg(chord_name, svg_data, output_file)
+    print(f"HTML file '{output_file}' created successfully.")
+
+if __name__ == "__main__":
+    main()
