@@ -1,8 +1,10 @@
 # Chord-yzer v0.3 - Musical analyzer
+![chordizer_logo](https://github.com/user-attachments/assets/8ece85bb-6979-467c-9582-1a8512f66ab0)
 ## Chord Extraction & Database & Analysis Tool
 
 A python and HTML/CSS/JS based tool to **extract chords from any song**, 
 which  **creates a database to analyze and show** chord-key data by  different criteria as *title*, *artist*, by *chord type*, *number of times* a chord appears; by song, by a group of songs or globally.
+
 
 
 ## INCLUDES
@@ -24,6 +26,7 @@ which  **creates a database to analyze and show** chord-key data by  different c
 ```
 $ python cho.py
 ```
+![chordizer_info1](https://github.com/user-attachments/assets/edddabfb-23f0-4d63-b49c-1d4dd3900452)
 
 The program generates:
 1. _Artist_Title.html_ file. The visualizer of each song.
