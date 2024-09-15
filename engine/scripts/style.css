@@ -1,6 +1,7 @@
+/* Generals */
 body {
   margin: 0;
-  background: #F0E68C;
+  background: #d0f08c;
   color: #333333;
   font-family: monospace;
   transition: background 0.5s, color 0.5s;
@@ -12,7 +13,7 @@ header {
   height: 220px;
   position: sticky;
   top: 0;
-  background: #FDF5E6;
+  background: #f4fde6;
   border-radius: 0 0 10px 10px;
   padding: 20px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
@@ -59,7 +60,7 @@ ul#chords {
 
 ul#chords li {
   list-style: none;
-  background: #FFC107;
+  background: #a205fc;
   padding: 5px 10px;
   font-size: 20px;
   border-radius: 3px;
@@ -95,7 +96,7 @@ audio {
 }
 
 button {
-  background-color: #9E9D24;
+  background-color: #9e2428;
   color: #FFFFFF;
   border: none;
   padding: 10px;
@@ -105,7 +106,7 @@ button {
 }
 
 button:hover {
-  background-color: #7B7F0C;
+  background-color: #7f0c0c;
 }
 
 #dark-mode-toggle {
@@ -142,13 +143,13 @@ button:hover {
 
 .dark-mode .bpm-input, .dark-mode .keynote {
   background: #333333;
-  color: #CCCCCC; 
+  color: #CCCCCC;
   border: 1px solid #666666;
 }
 
 .dark-mode ul#chords li {
   background: #444444;
-  color: #CCCCCC; 
+  color: #CCCCCC;
 }
 
 .dark-mode ul#chords li.actived {
@@ -173,10 +174,57 @@ button:hover {
 
 .dark-mode #dark-mode-toggle button {
   background-color: #555555;
-  color: #CCCCCC; 
+  color: #CCCCCC;
 }
 
 .dark-mode #chord-diagram-current, .dark-mode #chord-diagram-next {
   border: 2px solid #666666;
   opacity: 1;
+}
+
+/* chord_db html styles */
+#table-container {
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  background-color: #fff;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #007bff; /* header colour */
+  color: white; /* text header colour */
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9; 
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+canvas {
+  display: block;
+  margin: 20px auto;
 }
