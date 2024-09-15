@@ -39,9 +39,9 @@ def generate_db_html():
     <h1>Chords Database</h1>
     <div id="buttons">
         <button onclick="showTable()">Table Database</button>
-        <button onclick="showBarChart()">Bar graphs</button>
-        <button onclick="showLineChart()">Line graphs</button>
-        <button onclick="showPieChart()">Graphic 2</button>
+        <button onclick="showBarChart()">Bar Graphs</button>
+        <button onclick="showLineChart()">Line Graphs</button>
+        <button onclick="showPieChart()">Pie Chart</button>
     </div>
     <div id="table-container">
         <table id="chords-table" class="display">
@@ -78,6 +78,7 @@ def generate_db_html():
             else:
                 chord = "N/A"
 
+            # Omitir acordes "N"
             if chord == "N":
                 continue
 
@@ -96,6 +97,12 @@ def generate_db_html():
     <script>
         var chart;
 
+        function destroyChart() {
+            if (chart) {
+                chart.destroy();
+            }
+        }
+
         function showTable() {
             document.getElementById("table-container").style.display = "block";
             document.getElementById("chart-canvas").style.display = "none";
@@ -104,16 +111,83 @@ def generate_db_html():
         function showBarChart() {
             document.getElementById("table-container").style.display = "none";
             document.getElementById("chart-canvas").style.display = "block";
+            destroyChart();
+            chart = new Chart(document.getElementById("chart-canvas"), {
+                type: 'bar',
+                data: getDataForChart(),
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Bar Graph of Chords Used'
+                        }
+                    }
+                }
+            });
         }
 
         function showLineChart() {
             document.getElementById("table-container").style.display = "none";
             document.getElementById("chart-canvas").style.display = "block";
+            destroyChart();
+            chart = new Chart(document.getElementById("chart-canvas"), {
+                type: 'line',
+                data: getDataForChart(),
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Line Graph of Chords Used'
+                        }
+                    }
+                }
+            });
         }
 
         function showPieChart() {
             document.getElementById("table-container").style.display = "none";
             document.getElementById("chart-canvas").style.display = "block";
+            destroyChart();
+            chart = new Chart(document.getElementById("chart-canvas"), {
+                type: 'pie',
+                data: getDataForChart(),
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Pie Chart of Chords Distribution'
+                        }
+                    }
+                }
+            });
+        }
+
+        function getDataForChart() {
+            var labels = [];
+            var data = [];
+
+            $('#chords-table tbody tr').each(function() {
+                var artist = $(this).find('td').eq(0).text();
+                var title = $(this).find('td').eq(1).text();
+                var chord = $(this).find('td').eq(2).text();
+                var timesUsed = parseInt($(this).find('td').eq(3).text());
+                labels.push(artist + " - " + title + " (" + chord + ")");
+                data.push(timesUsed);
+            });
+
+            return {
+                labels: labels,
+                datasets: [{
+                    label: 'Times Used',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
         }
 
         $(document).ready(function() {
