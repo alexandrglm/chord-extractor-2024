@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const transposeUpButton = document.getElementById("transpose-up");
   const transposeDownButton = document.getElementById("transpose-down");
   const capoCounter = document.getElementById("capo-counter");
+  const keynoteInput = document.getElementById("keynote");
   const chordDiagramCurrent = document.getElementById("chord-diagram-current");
   const chordDiagramNext = document.getElementById("chord-diagram-next");
   const chordCurrent = document.getElementById("chord-current");
@@ -84,12 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
     transposeChords(1);
     transposeCounter.innerHTML = parseInt(transposeCounter.innerHTML) + 1;
     capoCounter.innerHTML = transposeCounter.innerHTML * -1;
+    updateKeynote(1);
   });
 
   transposeDownButton.addEventListener("click", function () {
     transposeChords(-1);
     transposeCounter.innerHTML = parseInt(transposeCounter.innerHTML) - 1;
     capoCounter.innerHTML = transposeCounter.innerHTML * -1;
+    updateKeynote(-1);
   });
 
   velUpButton.addEventListener("click", function () {
@@ -180,6 +183,17 @@ document.addEventListener("DOMContentLoaded", function () {
       .replace(/F%23|F#/g, "Gb")
       .replace(/G%23|G#/g, "Ab")
       .replace(/A%23|A#/g, "Bb");
+  }
+
+  function updateKeynote(amount) {
+    const scale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    let currentNote = keynoteInput.value;
+    let currentIndex = scale.indexOf(currentNote);
+    if (currentIndex === -1) return;
+
+    let newIndex = (currentIndex + amount) % scale.length;
+    if (newIndex < 0) newIndex += scale.length;
+    keynoteInput.value = scale[newIndex];
   }
 
   const table = document.getElementById('chords-table');
