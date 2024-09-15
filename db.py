@@ -1,5 +1,7 @@
 import json
 import os
+import re
+from collections import defaultdict
 
 DB_FILE = "chords_db.json"
 
@@ -15,7 +17,7 @@ def generate_db_html():
     <html>
     <head>
         <meta charset="UTF-8">
-        <title>Chords Database</title>
+        <title>MUSIC DATABASE</title>
         <script src="./engine/scripts/chart.js"></script>
         <script src="./engine/scripts/jquery.min.js"></script>
         <script src="./engine/scripts/jquery.dataTables.min.js"></script>
@@ -36,19 +38,19 @@ def generate_db_html():
     <body>
     <h1>Chords Database</h1>
     <div id="buttons">
-        <button onclick="showTable()">Show Table</button>
-        <button onclick="showBarChart()">Bar Chart</button>
-        <button onclick="showLineChart()">Line Chart</button>
-        <button onclick="showPieChart()">Pie Chart</button>
+        <button onclick="showTable()">Table Database</button>
+        <button onclick="showBarChart()">Bar graphs</button>
+        <button onclick="showLineChart()">Line graphs</button>
+        <button onclick="showPieChart()">Graphic 2</button>
     </div>
     <div id="table-container">
-        <table id="chords-table">
+        <table id="chords-table" class="display">
             <thead>
                 <tr>
                     <th>Artist</th>
                     <th>Title</th>
                     <th>Chord</th>
-                    <th>Times Used</th>
+                    <th>Times used</th>
                     <th>BPM</th>
                     <th>Keynote</th>
                 </tr>
@@ -56,20 +58,40 @@ def generate_db_html():
             <tbody>
     """
 
+    chord_counts = defaultdict(int)
+
     for entry in chords_db:
         artist = entry.get("artist", "Unknown")
         title = entry.get("title", "Unknown")
         bpm = entry.get("bpm", "N/A")
         keynote = entry.get("keynote", "Unknown")
-        for chord, count in entry.get("chords", {}).items():
-            html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td><td>{bpm}</td><td>{keynote}</td></tr>"
+
+        for chord_change in entry.get("chords", []):
+            if isinstance(chord_change, str):
+                match = re.search(r"chord='(.+?)', timestamp=(\d+\.\d+)", chord_change)
+                if match:
+                    chord = match.group(1)
+                else:
+                    chord = "N/A"
+            elif isinstance(chord_change, dict):
+                chord = chord_change.get("chord", "N/A")
+            else:
+                chord = "N/A"
+
+            if chord == "N":
+                continue
+
+            chord_counts[(artist, title, chord, bpm, keynote)] += 1
+
+    for (artist, title, chord, bpm, keynote), count in chord_counts.items():
+        html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td><td>{bpm}</td><td>{keynote}</td></tr>"
 
     html_content += """
             </tbody>
         </table>
     </div>
 
-    <canvas id="chart-canvas" width="400" height="200"></canvas>
+    <canvas id="chart-canvas" width="400" height="200" style="display:none;"></canvas>
 
     <script>
         var chart;
@@ -82,93 +104,31 @@ def generate_db_html():
         function showBarChart() {
             document.getElementById("table-container").style.display = "none";
             document.getElementById("chart-canvas").style.display = "block";
-
-            if (chart) {
-                chart.destroy();
-            }
-
-            var ctx = document.getElementById("chart-canvas").getContext("2d");
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [""" + ', '.join(f'"{entry["title"]}"' for entry in chords_db) + """],
-                    datasets: [{
-                        label: 'Times Used',
-                        data: [""" + ', '.join(f'{sum(chord["chords"].values())}' for chord in chords_db) + """],
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
         }
 
         function showLineChart() {
             document.getElementById("table-container").style.display = "none";
             document.getElementById("chart-canvas").style.display = "block";
-
-            if (chart) {
-                chart.destroy();
-            }
-
-            var ctx = document.getElementById("chart-canvas").getContext("2d");
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [""" + ', '.join(f'"{entry["title"]}"' for entry in chords_db) + """],
-                    datasets: [{
-                        label: 'Times Used',
-                        data: [""" + ', '.join(f'{sum(chord["chords"].values())}' for chord in chords_db) + """],
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
         }
 
         function showPieChart() {
             document.getElementById("table-container").style.display = "none";
             document.getElementById("chart-canvas").style.display = "block";
-
-            if (chart) {
-                chart.destroy();
-            }
-
-            var ctx = document.getElementById("chart-canvas").getContext("2d");
-            chart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: [""" + ', '.join(f'"{entry["title"]}"' for entry in chords_db) + """],
-                    datasets: [{
-                        label: 'Times Used',
-                        data: [""" + ', '.join(f'{sum(chord["chords"].values())}' for chord in chords_db) + """],
-                        backgroundColor: ['rgba(255, 99, 132, 0.5)', 'rgba(54, 162, 235, 0.5)', 'rgba(75, 192, 192, 0.5)'],
-                        borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
-            });
         }
 
-        showTable();
+        $(document).ready(function() {
+            $('#chords-table').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+                }
+            });
+        });
     </script>
     </body>
     </html>
