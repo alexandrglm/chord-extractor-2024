@@ -61,7 +61,7 @@ def update_chords_db(artist, title, chords, bpm, tempo_changes, tones_at_beats, 
     return song_entry
 
 def main():
-    audio_file = input("Enter the PATH to the audio file: ")
+    audio_file = input("Enter the path to the audio file: ")
     artist_name = input("ARTIST ?: ")
     song_title = input("SONG TITLE ?: ")
 
