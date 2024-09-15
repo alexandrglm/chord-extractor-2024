@@ -18,15 +18,10 @@ which  **creates a database to analyze and show** chord-key data by  different c
 
 ## REQUIREMENTS
 
- - Python.
- - Ohollo's chord-extractor and **all** of its dependences.
- (Follow steps from   https://github.com/ohollo/chord-extractor)
-
-
+ - Python 3.9.x
+ - pip install numpy librosa chord-extractor (and it requirements)
 
 ## USAGE
-
-LINUX:
 ```
 $ python cho.py
 ```
