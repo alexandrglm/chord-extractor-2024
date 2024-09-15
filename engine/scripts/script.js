@@ -137,12 +137,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (chordCurrent.innerHTML != chord.innerHTML) {
           chordCurrent.innerHTML = chord.innerHTML;
-          chordDiagramCurrent.src = `./diagrams/${instrument}/${simplifyChord(chord.innerHTML)}.png`;
+          chordDiagramCurrent.src = `./engine/diagrams/${instrument}/${simplifyChord(chord.innerHTML)}.png`;
         }
 
         if (chordNext.innerHTML != chord.nextElementSibling.innerHTML) {
           chordNext.innerHTML = chord.nextElementSibling.innerHTML;
-          chordDiagramNext.src = `./diagrams/${instrument}/${simplifyChord(chord.nextElementSibling.innerHTML)}.png`;
+          chordDiagramNext.src = `./engine/diagrams/${instrument}/${simplifyChord(chord.nextElementSibling.innerHTML)}.png`;
         }
       }
     });
