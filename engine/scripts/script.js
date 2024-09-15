@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Obtener elementos
   const audio = document.querySelector("audio");
   const chords = document.querySelectorAll("#chords li");
   const transposeCounter = document.getElementById("transpose-counter");
@@ -16,11 +17,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const updateBPMButton = document.getElementById("update-bpm");
   const zoomInButton = document.getElementById("zoom-in");
   const zoomOutButton = document.getElementById("zoom-out");
+  const darkModeToggle = document.getElementById("dark-mode-toggle");
 
   let maxChordLength = 0;
   let instrument = "guitar";
   let playbackRate = 1.0;
   let currentBPM = 120;
+
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+
+  darkModeToggle.addEventListener("click", toggleDarkMode);
 
   chords.forEach((chord) => {
     chord.addEventListener("click", function () {
@@ -194,31 +202,5 @@ document.addEventListener("DOMContentLoaded", function () {
     let newIndex = (currentIndex + amount) % scale.length;
     if (newIndex < 0) newIndex += scale.length;
     keynoteInput.value = scale[newIndex];
-  }
-
-  const table = document.getElementById('chords-table');
-  if (table) {
-    const headers = table.querySelectorAll('th');
-    headers.forEach((header, index) => {
-      header.addEventListener('click', () => {
-        const rows = Array.from(table.querySelectorAll('tbody tr'));
-        const isAscending = header.classList.contains('asc');
-        rows.sort((rowA, rowB) => {
-          const cellA = rowA.children[index].innerText;
-          const cellB = rowB.children[index].innerText;
-          if (isNaN(cellA)) {
-            return cellA.localeCompare(cellB);
-          }
-          return cellA - cellB;
-        });
-        if (isAscending) {
-          rows.reverse();
-        }
-        table.querySelector('tbody').append(...rows);
-        headers.forEach(h => h.classList.remove('asc', 'desc'));
-        header.classList.toggle('asc', !isAscending);
-        header.classList.toggle('desc', isAscending);
-      });
-    });
   }
 });
