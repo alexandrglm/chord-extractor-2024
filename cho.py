@@ -76,34 +76,36 @@ def load_scales():
     return scales
 
 def simplify_chord(chord_name):
-    """Simplifica el nombre del acorde para asegurar una comparación consistente."""
-    # Ejemplo de simplificación: quitar posibles alteraciones como 'maj7', 'm7', etc.
     if '/' in chord_name:
         chord_name = chord_name.split('/')[0]
     return chord_name
 
-def match_chords_to_scales(chords, scales, tolerance=0.7):
+def match_chords_to_scales(chords, scales, tolerance=0.1):
     chord_names = set(simplify_chord(chord.chord) for chord in chords)
-    print(f"Simplified Chord names: {chord_names}")  # Debugging line
+    print(f"Simplified Chord names: {chord_names}")
 
     best_match = None
     best_match_score = 0
+    matched_scales = {}
     for keynote, scale_types in scales.items():
         for scale_name, scale_notes in scale_types.items():
             scale_notes_set = set(scale_notes)
-            print(f"Checking scale: Keynote: {keynote}, Scale: {scale_name}, Notes: {scale_notes_set}")  # Debugging line
+            print(f"Checking scale: Keynote: {keynote}, Scale: {scale_name}, Notes: {scale_notes_set}")
 
             intersection_count = len(chord_names.intersection(scale_notes_set))
             match_score = intersection_count / len(chord_names) if chord_names else 0
-            print(f"Match score for Keynote {keynote}, Scale {scale_name}: {match_score}")  # Debugging line
+            print(f"Match score for Keynote {keynote}, Scale {scale_name}: {match_score}")
 
-            if match_score >= tolerance and match_score > best_match_score:
-                best_match = keynote
-                best_match_score = match_score
+            if match_score >= tolerance:
+                matched_scales[(keynote, scale_name)] = match_score
+                if match_score > best_match_score:
+                    best_match = keynote
+                    best_match_score = match_score
 
-    print(f"Best match: {best_match}, Best match score: {best_match_score}")  # Debugging line
-    return best_match
+    print(f"Best match: {best_match}, Best match score: {best_match_score}")
 
+    matched_scales_str_keys = {f"{keynote}-{scale_name}": score for (keynote, scale_name), score in matched_scales.items()}
+    return best_match, matched_scales_str_keys
 
 def update_chords_db(artist, title, chords, bpm, tempo_changes, tones_at_beats, matches):
     if os.path.exists(DB_FILE):
@@ -131,7 +133,7 @@ def update_chords_db(artist, title, chords, bpm, tempo_changes, tones_at_beats, 
         "bpm": bpm,
         "tempo_changes": tempo_changes,
         "tones_at_beats": tones_at_beats_serializable,
-        "matches": matches
+        "keynote": matches
     }
 
     chords_db.append(song_entry)
@@ -162,10 +164,10 @@ def main():
 
     chords = extract_chords_from_audio(audio_file)
 
-    keynote = match_chords_to_scales(chords, load_scales())
+    keynote, matched_scales = match_chords_to_scales(chords, load_scales())
     print(f"Keynote: {keynote}")
 
-    song_entry = update_chords_db(artist_name, song_title, chords, tempo, beat_times, tones_at_beats, keynote)
+    song_entry = update_chords_db(artist_name, song_title, chords, tempo, beat_times, tones_at_beats, matched_scales)
 
     html_file = generate_html_with_chords(audio_file, chords, artist_name, song_title, tempo, beat_times, tones_at_beats, keynote)
     print(f"Analysis complete. Results saved to {html_file}")
