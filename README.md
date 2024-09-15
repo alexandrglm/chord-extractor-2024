@@ -1,5 +1,5 @@
 # Chord-yzer v0.3 - Musical analyzer
-![chordizer_logo](https://github.com/user-attachments/assets/8ece85bb-6979-467c-9582-1a8512f66ab0)
+![Chordyzer_Logo](https://github.com/user-attachments/assets/13330661-dc06-481a-ab34-e39869134d54)
 ## Chord Extraction & Database & Analysis Tool
 
 A python and HTML/CSS/JS based tool to **extract chords from any song**, 
