@@ -56,12 +56,15 @@ def generate_html_with_chords(audio_file, chords, artist_name, song_title, tempo
           <input type="radio" id="ukulele" name="instrument" value="ukulele" />
           <label for="ukulele">Ukulele</label>
         </div>
+        <div id="dark-mode-toggle">
+         <button id="toggle-dark-mode">Toggle Dark Mode</button>
+        </div>
       </div>
       <div id="chord-diagram-bar">
-        <img id="chord-diagram-current" src="./diagrams/empty.png" />
+        <img id="chord-diagram-current" src="./engine/diagrams/empty.png" />
         <h1 id="chord-current"></h1>
         <div style=" width: 2px; height: 100%; display: block; background: #8d94b4; margin: 15px; "></div>
-        <img id="chord-diagram-next" src="./diagrams/empty.png" />
+        <img id="chord-diagram-next" src="./engine/diagrams/empty.png" />
         <h1 id="chord-next"></h1>
       </div>
     </header>
