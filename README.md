@@ -26,7 +26,9 @@ which  **creates a database to analyze and show** chord-key data by  different c
 ```
 $ python cho.py
 ```
-![chordizer_info1](https://github.com/user-attachments/assets/edddabfb-23f0-4d63-b49c-1d4dd3900452)
+![test_v0 3](https://github.com/user-attachments/assets/d84eb007-197e-48ea-b3f4-25d373c852e8)
+
+
 
 The program generates:
 1. _Artist_Title.html_ file. The visualizer of each song.
@@ -35,7 +37,7 @@ The program generates:
 **In order to generatethe files both,  you are told to provide some info as:**
  *- ARTIST NAME*
  *- SONG TITLE*
-
+![chordizer_info1](https://github.com/user-attachments/assets/edddabfb-23f0-4d63-b49c-1d4dd3900452)
 (Development in progress)
 
 2024 September, 15th.
