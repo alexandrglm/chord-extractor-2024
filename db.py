@@ -24,17 +24,67 @@ def generate_db_html():
         <script src="./engine/scripts/jquery.min.js"></script>
         <script src="./engine/scripts/jquery.dataTables.min.js"></script>
         <link rel="stylesheet" href="./engine/scripts/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="./engine/scripts/style.css">
         <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            h1 { text-align: center; margin-bottom: 40px; }
-            #buttons { text-align: center; margin-bottom: 20px; }
-            button { padding: 10px 20px; margin: 5px; cursor: pointer; }
-            canvas { display: block; margin: 20px auto; }
-            table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-            table, th, td { border: 1px solid #ddd; }
-            th, td { padding: 8px; text-align: center; }
-            th { background-color: #f4f4f4; cursor: pointer; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
+            #buttons {
+                margin-bottom: 20px;
+            }
+
+            #buttons button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+            #buttons button:hover {
+                background-color: #45a049;
+            }
+
+            #table-container {
+                margin-top: 20px;
+            }
+
+            table {
+                width: 100%;
+                margin-top: 20px;
+                border-collapse: collapse;
+                background-color: #f4f4f4;
+            }
+
+            table, th, td {
+                border: 1px solid #ddd;
+            }
+
+            th, td {
+                padding: 12px;
+                text-align: center;
+            }
+
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            tr:hover {
+                background-color: #ddd;
+            }
+
+            canvas {
+                display: block;
+                margin: 20px auto;
+            }
         </style>
     </head>
     <body>
