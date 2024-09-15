@@ -64,9 +64,11 @@ def generate_db_html():
         artist = entry.get("artist", "Unknown")
         title = entry.get("title", "Unknown")
         bpm = entry.get("bpm", "N/A")
-        keynote = entry.get("keynote", "Unknown")
+        keynote = entry.get("keynote", {})
 
-        for chord_change in entry.get("chords", []):
+        best_keynote = max(keynote, key=keynote.get, default="Unknown")
+
+        for chord_change in entry.get("chords", {}):
             if isinstance(chord_change, str):
                 match = re.search(r"chord='(.+?)', timestamp=(\d+\.\d+)", chord_change)
                 if match:
@@ -78,11 +80,10 @@ def generate_db_html():
             else:
                 chord = "N/A"
 
-            # Omitir acordes "N"
             if chord == "N":
                 continue
 
-            chord_counts[(artist, title, chord, bpm, keynote)] += 1
+            chord_counts[(artist, title, chord, bpm, best_keynote)] += 1
 
     for (artist, title, chord, bpm, keynote), count in chord_counts.items():
         html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td><td>{bpm}</td><td>{keynote}</td></tr>"
