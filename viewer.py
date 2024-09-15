@@ -26,6 +26,8 @@ def generate_html_with_chords(audio_file, chords, artist_name, song_title, tempo
     <!DOCTYPE html>
     <html>
     <head>
+        <link rel="icon" href="./favicon.ico" sizes="any">
+        <link rel="icon" href="./favicon.svg" type="image/svg+xml">
         <meta charset="UTF-8">
         <title>Chords from {artist_name} - {song_title}</title>
         <script src="./engine/scripts/script.js"></script>
