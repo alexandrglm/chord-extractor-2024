@@ -1,4 +1,4 @@
-# Chord-yzer v0.2 - Musical analyzer
+# Chord-yzer v0.3 - Musical analyzer
 ## Chord Extraction & Database & Analysis Tool
 _Should be the real alternative to Chordify, but free and offline._ 
 
@@ -41,4 +41,4 @@ The program generates:
 
 (Development in progress)
 
-2024 September, 8th.
+2024 September, 15th.
