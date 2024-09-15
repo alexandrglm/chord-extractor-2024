@@ -1,6 +1,5 @@
 # Chord-yzer v0.3 - Musical analyzer
 ## Chord Extraction & Database & Analysis Tool
-_Should be the real alternative to Chordify, but free and offline._ 
 
 A python and HTML/CSS/JS based tool to **extract chords from any song**, 
 which  **creates a database to analyze and show** chord-key data by  different criteria as *title*, *artist*, by *chord type*, *number of times* a chord appears; by song, by a group of songs or globally.
