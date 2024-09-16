@@ -1,4 +1,4 @@
-# Chord-yzer v0.3 - Musical analyzer
+# Chordyzer v0.3 - Musical analyzer
 ![Chordyzer_Logo](https://github.com/user-attachments/assets/13330661-dc06-481a-ab34-e39869134d54)
 ## Chord Extraction & Database & Analysis Tool
 
@@ -24,7 +24,7 @@ which  **creates a database to analyze and show** chord-key data by  different c
 
 ## USAGE
 ```
-$ python cho.py
+$ python Chordyzer.py
 ```
 ![test_v0 3](https://github.com/user-attachments/assets/d84eb007-197e-48ea-b3f4-25d373c852e8)
 
