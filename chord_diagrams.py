@@ -1,5 +1,3 @@
-# chord_diagrams.py
-
 CHORD_IMAGES = {
     'A': 'A.png', 'A6': 'A6.png', 'A7': 'A7.png', 'A9': 'A9.png', 'Aaug': 'Aaug.png',
     'Ab': 'Ab.png', 'Ab6': 'Ab6.png', 'Ab7': 'Ab7.png', 'Ab9': 'Ab9.png', 'Abaug': 'Abaug.png',
