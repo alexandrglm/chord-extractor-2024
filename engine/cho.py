@@ -1,10 +1,10 @@
 import os
 import json
-import sys
 from viewer import generate_html_with_chords
 from db import generate_db_html
 from music import extract_chords_from_audio, get_bpm, get_tone_at_beats, load_scales, match_chords_to_scales
 from download_youtube_audio import download_audio_from_youtube
+import re
 
 DB_FILE = "chords_db.json"
 
@@ -62,23 +62,32 @@ def update_chords_db(artist, title, chords, bpm, tempo_changes, tones_at_beats, 
 
     return song_entry
 
+def is_youtube_url(url):
+    youtube_regex = (
+        r'(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/)[\w-]+'
+    )
+    return re.match(youtube_regex, url) is not None
+
 def main():
     input_path = input("Enter the path to the audio file or YouTube URL: ")
-    artist_name = input("ARTIST ?: ")
-    song_title = input("SONG TITLE ?: ")
 
-    if input_path.startswith('http'):
-        # Suponiendo que es una URL de YouTube
-        if not input_path.startswith('https://'):
-            print("Error: Unsupported YouTube URL format.")
-            return
-        audio_file = download_audio_from_youtube(input_path)
+    if is_youtube_url(input_path):
+        artist_name = input("Enter the artist name: ")
+        song_title = input("Enter the song title: ")
+        output_dir = input("Enter the directory where the audio file should be saved: ")
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        audio_file = download_audio_from_youtube(input_path, artist_name, song_title, output_dir)
     else:
         audio_file = input_path
+        artist_name = input("Enter the artist name: ")
+        song_title = input("Enter the song title: ")
 
-    if not os.path.exists(audio_file):
-        print("Error: File does not exist.")
-        return
+        if not os.path.exists(audio_file):
+            print("Error: File does not exist.")
+            return
 
     tempo, beat_times = get_bpm(audio_file)
     print(f"BPM: {tempo}")
