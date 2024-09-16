@@ -1,6 +1,5 @@
 import os
 import json
-import numpy as np
 from viewer import generate_html_with_chords
 from db import generate_db_html
 from music import extract_chords_from_audio, get_bpm, get_tone_at_beats, load_scales, match_chords_to_scales
@@ -15,6 +14,7 @@ def sanitize_filename(input_str):
     return sanitized.strip().replace(' ', '_')
 
 def convert_ndarray_to_list(obj):
+    import numpy as np
     if isinstance(obj, np.ndarray):
         return obj.tolist()
     elif isinstance(obj, (list, tuple)):
@@ -61,7 +61,7 @@ def update_chords_db(artist, title, chords, bpm, tempo_changes, tones_at_beats, 
     return song_entry
 
 def main():
-    audio_file = input("Enter the path to the audio file: ")
+    audio_file = input("PATH to the audio file: ")
     artist_name = input("ARTIST ?: ")
     song_title = input("SONG TITLE ?: ")
 
