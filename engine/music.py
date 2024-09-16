@@ -2,7 +2,7 @@ import os
 import librosa
 import numpy as np
 from chord_extractor.extractors import Chordino
-from engine.scales import scales
+from scales import scales
 
 def extract_chords_from_audio(audio_file):
     chordino = Chordino(roll_on=1.0)
