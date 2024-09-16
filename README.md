@@ -1,4 +1,4 @@
-# Chordyzer v0.4 - Musical analyzer
+# Chordyzer v0.4 - Musical analyzer from localfile songs & YouTube links
 ![Chordyzer_Logo](https://github.com/user-attachments/assets/13330661-dc06-481a-ab34-e39869134d54)
 ## Chord Extraction & Database & Analysis Tool
 
@@ -8,7 +8,8 @@ which  **creates a database to analyze and show** chord-key data by  different c
 ## REQUIREMENTS
 
  - Python 3.9.x
- - pip install numpy librosa chord-extractor json 
+ - sudo apt install ffmpeg 
+ - pip install numpy librosa chord-extractor json yt-dlp pydub pytube
 
 ## USAGE
 ```
@@ -18,7 +19,7 @@ $ python Chordyzer.py
 ![test_v0 3](https://github.com/user-attachments/assets/d84eb007-197e-48ea-b3f4-25d373c852e8)
 
 ## INCLUDES
- - Chord extracting from any MP3, WAV, MIDI file.
+ - Chord extracting from any MP3, WAV, MIDI file, or directly a Youtube link.
  - Chord Visualizer with GUITAR diagrams, HTML5-webkit compatible.
  - Chord carts transposing with live changing diagrams.
  - Bar/Time Signatures counting, Tempo/BPM analyzer tool & live rhythm change.
