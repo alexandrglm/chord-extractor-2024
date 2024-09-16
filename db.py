@@ -2,17 +2,22 @@ import json
 import os
 import re
 from collections import defaultdict
+from datetime import datetime
 
 DB_FILE = "chords_db.json"
 
 def generate_db_html():
     if os.path.exists(DB_FILE):
+        created_at = datetime.fromtimestamp(os.path.getctime(DB_FILE)).strftime("%Y-%m-%d %H:%M:%S")
+        updated_at = datetime.fromtimestamp(os.path.getmtime(DB_FILE)).strftime("%Y-%m-%d %H:%M:%S")
         with open(DB_FILE, "r", encoding="utf-8") as f:
             chords_db = json.load(f)
     else:
+        created_at = "Unknown"
+        updated_at = "Unknown"
         chords_db = []
 
-    html_content = """
+    html_content = f"""
     <!DOCTYPE html>
     <html>
     <head>
@@ -26,11 +31,11 @@ def generate_db_html():
         <link rel="stylesheet" href="./engine/scripts/jquery.dataTables.min.css">
         <link rel="stylesheet" href="./engine/scripts/style.css">
         <style>
-            #buttons {
+            #buttons {{
                 margin-bottom: 20px;
-            }
+            }}
 
-            #buttons button {
+            #buttons button {{
                 background-color: #4CAF50;
                 color: white;
                 border: none;
@@ -42,53 +47,73 @@ def generate_db_html():
                 margin: 4px 2px;
                 cursor: pointer;
                 border-radius: 5px;
-            }
+            }}
 
-            #buttons button:hover {
+            #buttons button:hover {{
                 background-color: #45a049;
-            }
+            }}
 
-            #table-container {
+            #table-container {{
                 margin-top: 20px;
-            }
+            }}
 
-            table {
+            table {{
                 width: 100%;
                 margin-top: 20px;
                 border-collapse: collapse;
                 background-color: #f4f4f4;
-            }
+            }}
 
-            table, th, td {
+            table, th, td {{
                 border: 1px solid #ddd;
-            }
+            }}
 
-            th, td {
+            th, td {{
                 padding: 12px;
                 text-align: center;
-            }
+                position: relative;
+            }}
 
-            th {
+            th {{
                 background-color: #4CAF50;
                 color: white;
-            }
+            }}
 
-            tr:nth-child(even) {
+            tr:nth-child(even) {{
                 background-color: #f9f9f9;
-            }
+            }}
 
-            tr:hover {
+            tr:hover {{
                 background-color: #ddd;
-            }
+            }}
 
-            canvas {
+            .chord-image {{
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 10;
+                width: 150px;
+                border: 1px solid #ddd;
+                background: #fff;
+                padding: 5px;
+            }}
+
+            td:hover .chord-image {{
+                display: block;
+            }}
+
+            canvas {{
                 display: block;
                 margin: 20px auto;
-            }
+            }}
         </style>
     </head>
     <body>
     <h1>Chords Database</h1>
+    <p>Created at: {created_at}</p>
+    <p>Last updated: {updated_at}</p>
     <div id="buttons">
         <button onclick="showTable()">Table Database</button>
         <button onclick="showBarChart()">Bar Graphs</button>
@@ -138,7 +163,20 @@ def generate_db_html():
             chord_counts[(artist, title, chord, bpm, best_keynote)] += 1
 
     for (artist, title, chord, bpm, keynote), count in chord_counts.items():
-        html_content += f"<tr><td>{artist}</td><td>{title}</td><td>{chord}</td><td>{count}</td><td>{bpm}</td><td>{keynote}</td></tr>"
+        chord_image = f"./engine/diagrams/guitar/{chord}.png"
+        html_content += f"""
+            <tr>
+                <td>{artist}</td>
+                <td>{title}</td>
+                <td>
+                    {chord}
+                    <img src="{chord_image}" alt="Diagram of {chord}" class="chord-image">
+                </td>
+                <td>{count}</td>
+                <td>{bpm}</td>
+                <td>{keynote}</td>
+            </tr>
+        """
 
     html_content += """
             </tbody>
@@ -265,5 +303,5 @@ def generate_db_html():
     with open(db_html_file, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    print(f"\033[92m{db_html_file} has been generated\033[0m")
+    print(f"HTML file generated: {db_html_file}")
     return db_html_file
