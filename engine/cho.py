@@ -1,8 +1,10 @@
 import os
 import json
+import sys
 from viewer import generate_html_with_chords
 from db import generate_db_html
 from music import extract_chords_from_audio, get_bpm, get_tone_at_beats, load_scales, match_chords_to_scales
+from download_youtube_audio import download_audio_from_youtube
 
 DB_FILE = "chords_db.json"
 
@@ -61,9 +63,18 @@ def update_chords_db(artist, title, chords, bpm, tempo_changes, tones_at_beats, 
     return song_entry
 
 def main():
-    audio_file = input("PATH to the audio file: ")
+    input_path = input("Enter the path to the audio file or YouTube URL: ")
     artist_name = input("ARTIST ?: ")
     song_title = input("SONG TITLE ?: ")
+
+    if input_path.startswith('http'):
+        # Suponiendo que es una URL de YouTube
+        if not input_path.startswith('https://'):
+            print("Error: Unsupported YouTube URL format.")
+            return
+        audio_file = download_audio_from_youtube(input_path)
+    else:
+        audio_file = input_path
 
     if not os.path.exists(audio_file):
         print("Error: File does not exist.")
