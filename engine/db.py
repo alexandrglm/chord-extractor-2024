@@ -305,3 +305,4 @@ def generate_db_html():
 
     print(f"HTML file generated: {db_html_file}")
     return db_html_file
+
