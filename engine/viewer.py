@@ -1,8 +1,7 @@
+from scales import scales
 import os
 import json
 from chord_extractor.extractors import Chordino
-from engine.scales import scales
-from db import generate_db_html
 
 def sanitize_filename(input_str):
     import unicodedata
@@ -94,7 +93,7 @@ def generate_html_with_chords(audio_file, chords, artist_name, song_title, tempo
     </html>
     """
 
-    html_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), output_file_name)
+    html_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../', output_file_name)
     with open(html_file, "w", encoding="utf-8") as f:
         f.write(html_content)
 
